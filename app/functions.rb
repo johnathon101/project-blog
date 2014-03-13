@@ -38,11 +38,11 @@ end
 #Everything User, create, modify name, email, location, mood settings.
 #name, location(ST), email, password
 class User < ActiveRecord::Base
-  #user (id, name, email, location, mood_pref, password, auth, is_auth)
-  #def intitalize
-  #  @user=""
-  #  @user_id=0
-  #end
+  attr_accessor :flag
+  
+  def intitalize
+    @flag=flag
+  end
   
   def self.new_guy(sign_up)
     
@@ -58,28 +58,34 @@ class User < ActiveRecord::Base
   
   
   def self.login(name, password)
+    
     @user=User.where(:name => name, :password=>password).first
     #user.update_attributes(:auth=>1)
     return @user.id
   end
   
-  def change_name(new_name, auth)
+  def change_name(new_name, id, auth)
+    @user=User.find(id)
     @user.update_attributes({:name=>new_name})
   end
   
-  def change_email(new_email, auth)
+  def change_email(new_email, id, auth)
+    @user=User.find(id)
     @user.update_attributes({:email=>new_email}) 
   end
   
-  def change_location(new_location, auth)
+  def change_location(new_location, id, auth)
+    @user=User.find(id)
     @user.update_attributes({:location=>new_location})
   end
   
-  def change_mood_pref(new_mood_pref, auth)
+  def change_mood_pref(new_mood_pref, id, auth)
+    @user=User.find(id)
     @user.update_attributes({:mood_pref=>new_mood_pref})
   end
   
-  def change_password(new_password, auth)
+  def change_password(new_password, id, auth)
+    @user=User.find(id)
     @user.update_attributes({:password=>new_password})
   end
   

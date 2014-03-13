@@ -1,0 +1,10 @@
+<h10>Change Your Information</h10>
+<form method="post" action="/save_settings/<%= @user.id %>"><br>
+<h15>Name:</h15><input type="text" name="new_name" value=<%= @user.name %>><br>
+<h15>Location:</h15><input type="text" name="new_location" value=<%= @user.location %>><br>
+<h15>EMail</h15><input type="text" name="new_email" value= <%= @user.email %>><br>
+<h15>Mood Preference:</h15><input type="text" name="new_mood_pref" value= <%=@user.mood_pref%>><br>
+<h15>Password:</h15><input type="password" name="new_password"><br>
+<input type=submit value="Send Data">
+</form>
+<h10><a href="/main/<%=@user.id%>> Go Home </a></h10>
