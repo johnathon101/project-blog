@@ -1,1 +1,7 @@
-<%= user.posts %>
+<h5><%= @user.name %>'s Page!</h5><br>
+<h10><%= @user.email %></h10>
+<p><% Post.all.each do |post| %>
+	<br><h10><%= post.title %><h10><br>
+	<h12><%= post.post %><h12><br>	
+<% end %>
+<h10><a href="/compose/:<%= @user.id %>">Make a New Post!</a></h10>

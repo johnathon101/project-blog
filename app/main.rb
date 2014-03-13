@@ -8,9 +8,10 @@ class MainBlog < Sinatra::Base
     erb :login
   end
   
-  post "/login" do
-    @user.login(params[:name],params[:password])
-    redirect '/main/"#{@user.id}"'
+  #Client.find_by! first_name: 'Lifo'
+  get "/login" do
+    @user=User.login(params[:name],params[:password])
+    redirect "/main/#{@user}"
   end
   
   get "/sign_up" do
@@ -23,15 +24,20 @@ class MainBlog < Sinatra::Base
   end
   
   get "/main/:id" do
-      @user=Users.id.all
+    @user=User.find{params[:id]}
     erb :main
   end
   
-  get "/compose" do
+  get "/compose/:id" do
+    @user=User.find{params[:id]}
+    id=@user.id
+    binding.pry
     erb :compose
   end
   
-  post "/save" do
+  get "/save/:id" do
+    @user=User.find{params[:id]}
+    @post=Post.new_post(@user.id, params[:title], params[:post])
     erb :save
   end
 end

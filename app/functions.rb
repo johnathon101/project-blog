@@ -3,21 +3,46 @@ require 'logger'
 require 'pry'
 
   
-
 ActiveRecord::Base.establish_connection(
       :adapter  => 'sqlite3', 
       :database => 'blog'
   )
 ActiveRecord::Base.logger = Logger.new(STDERR)
 
+ActiveRecord::Schema.define do
+  unless ActiveRecord::Base.connection.tables.include? 'users'     
+    create_table :users do |table|
+       table.column :name, :string 
+       table.column :email, :string
+       table.column :password, :string
+       table.column :location, :string
+       table.column :mood_pref, :integer
+       table.column :auth, :integer
+    end
+   end
+   unless ActiveRecord::Base.connection.tables.include? 'posts'
+     create_table :posts do |table|
+       table.column :user_id, :integer
+       table.column :title, :string
+       table.column :post, :text
+       table.column :mood, :integer
+     end
+   end
+   unless ActiveRecord::Base.connection.tables.include? 'moods'
+     create_table :moods do |table|
+       table.column :post_id, integer
+       table.column :mood, integer
+     end
+   end
+end
 #Everything User, create, modify name, email, location, mood settings.
 #name, location(ST), email, password
 class User < ActiveRecord::Base
   #user (id, name, email, location, mood_pref, password, auth, is_auth)
-  def intitalize
-    @user=""
-    @user_id=0
-  end
+  #def intitalize
+  #  @user=""
+  #  @user_id=0
+  #end
   
   def self.new_guy(sign_up)
     
@@ -27,13 +52,15 @@ class User < ActiveRecord::Base
     location=sign_up[:location]
     mood_pref=sign_up[:mood_pref]
     password=sign_up[:password]
-    new_user= User.new({:name=> name, :email=> email, :location=>location, :mood_pref=>mood_pref, :password=>password, :auth=>rand(500), :is_auth=>0})
+    new_user= User.new({:name=> name, :email=> email, :location=>location, :mood_pref=>mood_pref, :password=>password, :auth=>rand(500)})
     new_user.save
   end
   
+  
   def self.login(name, password)
-    @user=User.find(name, password)
-    @user.update_attributes({:auth=>1})
+    @user=User.where(:name => name, :password=>password).first
+    #user.update_attributes(:auth=>1)
+    return @user.id
   end
   
   def change_name(new_name, auth)
@@ -65,8 +92,9 @@ end
 class Post < ActiveRecord::Base
   #CREATE TABLE posts (id integer primary key autoincrement, user_id integer, title varchar, post text)
   #posts db (id, user_id, title, post)
-  def self.new_post
-    new_post=Post.new(:id=>user_id, :title=>title, :post=>post)
+  def self.new_post(user_id, title, content)
+    new_post=Post.new(:user_id=>user_id, :title=>title, :post=>content)
+    new_post.save
   end
   
   def self.get_mood
