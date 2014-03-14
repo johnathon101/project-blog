@@ -37,7 +37,7 @@ class MainBlog < Sinatra::Base
     if @user.mood_pref!=params[:new_mood_pref] && params[:new_mood_pref]!="" 
        @user.change_mood_pref(params[:mood_pref], params[:id], @user.auth)
     end
-    if @user.passsword!=params[:new_password] && params[:new_password]!="" 
+    if @user.password!=params[:new_password] && params[:new_password]!="" 
         @user.change_password([:new_password], params[:id], @user.auth) 
     end
       
