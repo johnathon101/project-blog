@@ -112,7 +112,11 @@ class Post < ActiveRecord::Base
       puts a_word
       val_array<<@db.execute("SELECT value FROM dictionary WHERE word IS '#{fix_word}'")[0]
     end
-      
+    article_sum=val_array.compact
+    sum=0
+    real_sum=article_sum.inject {|sum, i| sum + i}
+    sum=real_sum.inject{|sum, i|sum+=i}
+    @post_in.update_attributes({:mood=>sum}) 
     return sum
   end
   
