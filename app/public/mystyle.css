@@ -1,0 +1,51 @@
+a:link {color:#FF0000;}      /* unvisited link */
+a:visited {color:#006600;}  /* visited link */
+a:hover {color:#CCFF99;}  /* mouse over link */
+a:active {color:#0000FF;}
+
+hr {color:sienna;}
+p {margin-left:30px;
+margin-right:30px;	
+	color:#B8B8B8;
+	font-family:arial;
+	
+}
+body {background-image:url("/background.jpg");	
+background-attachment:fixed;
+}
+h1 {color: white;
+	font-family: arial;
+	font-style:bold;
+	background-color:black;
+}
+h2 {color: white;
+	font-family:arial;
+	font-style:italic;
+	font-size:12;
+}
+h5{
+	align:left;
+	color: white;
+	font-family:arial;
+	font-style:bold;
+	font-size:14;
+}
+h8{
+	align:left;
+	color:white;
+	font-family:arial;
+}
+h9{
+	font-size:20;
+	text-align:center;
+	border:20px solid black;
+	border-radius:15px;
+	background-color:black;
+	display: inline-block;
+	padding: 1em;
+	margin: 1em;
+
+}
+h12{
+	font-size:16;
+}

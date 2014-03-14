@@ -21,7 +21,7 @@ cant
 clumsy
 coarse
 cold
-cold-hearted
+coldhearted
 collapse
 confused
 contradictory
@@ -81,7 +81,7 @@ gruesome
 guilty
 haggard
 hard
-hard-hearted
+hardhearted
 harmful
 hate
 hideous

@@ -1,9 +1,14 @@
+<head>
+<link href="<%= url('/mystyle.css') %>" rel="stylesheet" type="text/css" />
+</head>
+<h5><%= @user.name %>'s Page!</h5>
+<h5><%= @user.location %></h5>
+<h5><%= @user.email %></h5>
 
-<h5><%= @user.name %>'s Page!</h5><br>
-<h10><%= @user.email %></h10>
-<p><% Post.all.each do |post| %>
+<p><% Post.all.reverse.each do |post| %>
 	<br><h10><%= post.title %><h10><br>
 	<h12><%= post.post %><h12><br>	
+	<h8><%= post.mood %></h8>	
 <% end %>
 <p><h10><a href="/compose/<%= @user.id %>">Make a New Post!</a></h10></p>
 <p><h10><a href="/update_settings/<%=@user.id%>">Update Settings</a></h10></p>

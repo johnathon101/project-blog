@@ -38,15 +38,13 @@ end
 #Everything User, create, modify name, email, location, mood settings.
 #name, location(ST), email, password
 class User < ActiveRecord::Base
+  has_many :posts
   attr_accessor :flag
-  
   def intitalize
     @flag=flag
   end
   
   def self.new_guy(sign_up)
-    
-#CREATE TABLE users (id integer primary key autoincrement, name varchar, email varchar, location varchar, mood_pref integer, password varchar, auth integer, is_auth integer);
     name=sign_up[:name]
     email=sign_up[:email]
     location=sign_up[:location]
@@ -58,7 +56,6 @@ class User < ActiveRecord::Base
   
   
   def self.login(name, password)
-    
     @user=User.where(:name => name, :password=>password).first
     #user.update_attributes(:auth=>1)
     return @user.id
@@ -88,27 +85,40 @@ class User < ActiveRecord::Base
     @user=User.find(id)
     @user.update_attributes({:password=>new_password})
   end
-  
-  
-  #db table users
 end
 
 #Contains all posts, user id who wrote it, runs through filter to get mood value
 #title(varchar), post(txt) limit 510, user_id
 class Post < ActiveRecord::Base
-  #CREATE TABLE posts (id integer primary key autoincrement, user_id integer, title varchar, post text)
-  #posts db (id, user_id, title, post)
+  belongs_to :user
+  
   def self.new_post(user_id, title, content)
-    new_post=Post.new(:user_id=>user_id, :title=>title, :post=>content)
+    new_post=Post.new(:user_id=>user_id, :title=>title, :post=>content, :mood=> 0)
     new_post.save
+    return new_post.id
   end
   
-  def self.get_mood
-    words=user.id[:post].split(' ')
-    #words.each match table_of_values add to a sum for mood scale
+  def self.get_mood(post_id)
+    @db=SQLite3::Database.open("blog")
+    @post_in=Post.where(:id => post_id).first
+    val_array=Array.new
+    words=[]
+    article_sum=0
+    post_from_db=@post_in.post
+    words=post_from_db.split(' ')
+    #This is probably terribly inefficient in resources, refactor.
+    words.each do |a_word|
+      fix_word=a_word.strip.downcase.gsub(/[^A-Za-z0-9]+/, '')
+      puts a_word
+      val_array<<@db.execute("SELECT value FROM dictionary WHERE word IS '#{fix_word}'")[0]
+    end
+      
+    return sum
   end
   
-  def self.my_posts
+  def self.my_posts(id)
+    #@user=User.where(:name => name, :password=>password).first
+    @post=Post.where(:user_id => id)
     #Psuedo SELECT * ON posts WHERE user.id = user_id
     #posts=user.id
   end
@@ -118,7 +128,8 @@ end
 #post_id, mood
 class Mood < ActiveRecord::Base
   #CREATE TABLE moods (id integer primary key autoincrement, user_id integer, title varchar, mood integer);
-  def self.new_mood
+  
+  def self.new_mood(user_id, title, mood)
     new_mood=Mood.new(:id=>user.id, :title=>title, :mood=>mood)
   #need values of words with different connotations, ran through the post text and assign a value to any hits from the words to text. Maybe create a table of words with values we're looking for and join them to get a sum?
   #db table moods
@@ -134,3 +145,8 @@ end
 class HeatMap
   #db table heat_maps
 end
+
+#CREATE TABLE users (id integer primary key autoincrement, name varchar, email varchar, location varchar, mood_pref integer, password varchar, auth integer, is_auth integer);
+
+#CREATE TABLE posts (id integer primary key autoincrement, user_id integer, title varchar, post text)
+#posts db (id, user_id, title, post)

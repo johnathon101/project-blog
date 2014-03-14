@@ -10,6 +10,7 @@ class MainBlog < Sinatra::Base
   
   #Client.find_by! first_name: 'Lifo'
   post "/login" do
+    @user=0
     @user=User.login(params[:name],params[:password])
     if @user
       redirect to "/main/#{@user}"
@@ -40,7 +41,7 @@ class MainBlog < Sinatra::Base
     if @user.password!=params[:new_password] && params[:new_password]!="" 
         @user.change_password([:new_password], params[:id], @user.auth) 
     end
-      
+    redirect to "/main/#{@user.id}"  
   end
   
   get "/sign_up" do
@@ -54,20 +55,19 @@ class MainBlog < Sinatra::Base
   
   get "/main/:id" do
     @user=User.find(params[:id])
-    binding.pry
     erb :main
   end
   
   get "/compose/:id" do
     @user=User.find(params[:id])
     id=@user.id
-    binding.pry
     erb :compose
   end
   
   post "/save/:id" do
     @user=User.find(params[:id])
     @post=Post.new_post(@user.id, params[:title], params[:post])
+    #@user=User.where(:name => name, :password=>password).first
     erb :save
   end
 end

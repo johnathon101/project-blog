@@ -1,3 +1,5 @@
+<link href="<%= url('/mystyle.css') %>" rel="stylesheet" type="text/css" />
+</head>
 <form method="post" action="/save/<%=@user.id %>">
 <h10>Title of Post: </h10><input type="text" name="title"><br>
 <h10>Content: </h10><br><textarea name="post" cols="102" rows="5"></textarea>

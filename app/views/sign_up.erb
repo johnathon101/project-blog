@@ -1,11 +1,13 @@
+<head>
+<link href="<%= url('/mystyle.css') %>" rel="stylesheet" type="text/css" />
+</head>
 <h1>Please Enter Your Information Below</h1>
 <form method="post" action="/new_user">
-<br><h10>User Name:</h10><input type="text" name="name">
-<br><h10>Password: </10><input type="password" name="password">
-<br><h10>Location:</h10><input type="text" name="location">
-<br><h10>Mood Preference:</h10><input type="text" name="mood_pref" >
-<br><h10>Email Address:</h10><input type="text" name="email">
-
-<input type="submit" value="Create Account">
+<table>
+<tr><td><h10>User Name:</h10></td><td><input type="text" name="name"></td></tr>
+<tr><td><h10>Password: </10></td><td><input type="password" name="password"></td></tr>
+<tr><td><h10>Location:</h10></td><td><input type="text" name="location"></td></tr>
+<tr><td><h10>Mood Preference:</h10></td><td><input type="text" name="mood_pref"></td></tr>
+<tr><td><h10>Email Address:</h10></td><td><input type="text" name="email"></td></tr>
+<tr><input type="submit" value="Create Account"></tr>
 </form>
-
