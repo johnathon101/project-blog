@@ -112,9 +112,21 @@ class Post < ActiveRecord::Base
     end
     article_sum=val_array.compact
     sum=0
+    value=0
     real_sum=article_sum.inject {|sum, i| sum + i}
     sum=real_sum.inject{|sum, i|sum+=i}
-    return sum
+    if sum>5
+      value=5
+    elsif sum>2 && sum<=5
+      value=4
+    elsif sum>=0 && sum<=2
+      value=3
+    elsif sum>-3 && sum<0
+      value=2
+    elsif sum<=-3
+      value=1
+    end
+    return value
   end
   
   def self.my_posts(id)
@@ -149,8 +161,3 @@ end
 class HeatMap
   #db table heat_maps
 end
-binding.pry
-#CREATE TABLE users (id integer primary key autoincrement, name varchar, email varchar, location varchar, mood_pref integer, password varchar, auth integer, is_auth integer);
-
-#CREATE TABLE posts (id integer primary key autoincrement, user_id integer, title varchar, post text)
-#posts db (id, user_id, title, post)

@@ -24,12 +24,24 @@ h2 {color: white;
 	font-style:italic;
 	font-size:12;
 }
+h3{
+	color:white;
+	text-align:left;
+	
+}
 h5{
-	align:left;
 	color: white;
 	font-family:arial;
 	font-style:bold;
 	font-size:14;
+	position:fixed;
+	top:85px;
+	left:20px; /* or whatever */
+}
+h6{
+	font-family:arial;
+	font-size:16;
+	
 }
 h8{
 	align:left;
@@ -47,10 +59,7 @@ h9{
 	margin: 1em;
 
 }
-h10{
-	font-style:bold;
-	font-color:white;
-}
+
 h12{
 	font-size:16;
 }

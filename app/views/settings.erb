@@ -7,7 +7,15 @@
 <tr><td><h15>Name:</h15></td><td><input type="text" name="new_name" value=<%= @user.name %>></td></tr>
 <tr><td><h15>Location:</h15></td><td><input type="text" name="new_location" value=<%= @user.location %>></td></tr>
 <tr><td><h15>EMail</h15></td><td><input type="text" name="new_email" value= <%= @user.email %>></td></tr>
-<tr><td><h15>Mood Preference:</h15></td><td><input type="text" name="new_mood_pref" value= <%=@user.mood_pref%>></td></tr>
+<tr><td><h15>Mood Preference:</h15></td>
+<td> <select name="new_mood_pref">
+	  <option value=1>Sad</option>
+	  <option value=2>A Bit Down</option>
+	  <option value=3>Nuetral</option>
+	  <option value=4>Pleased</option>
+	  <option value=5>Happy</option>
+	</select>
+</td></tr>
 <tr><td><h15>Password:</h15></td><td><input type="password" name="new_password"></td></tr>
 <input type=submit value="Send Data">
 </form>
