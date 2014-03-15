@@ -14,7 +14,7 @@ class MainBlog < Sinatra::Base
   
   #Client.find_by! first_name: 'Lifo'
   post "/login" do
-    if User.find(params[:name])
+    if User.where(:name=> params[:name]).first
         @user=User.login(params[:name],params[:password])
         redirect to "/main/#{@user}"
     else
