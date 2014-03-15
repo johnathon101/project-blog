@@ -5,25 +5,21 @@ require_relative './functions'
 class MainBlog < Sinatra::Base
   
   get "/" do
-    erb :login
+    erb :login,:layout => :layout_unsigned
+  end
+  
+  get "/sign_up" do
+    erb :sign_up, :layout => :layout_unsigned
   end
   
   #Client.find_by! first_name: 'Lifo'
   post "/login" do
-    #if User.find(params[:name])
-    @user=User.login(params[:name],params[:password])
-    #  redirect to "/main/#{@user}"
-      #binding.pry
-      #else
-      #redirect to "/sign_up"
-      #end
-    
-    #if User.find(params[:name])
-    redirect to "/main/#{@user}"
-      #binding.pry
-      #else
-      #redirect to "/sign_up"
-      #end
+    if User.find(params[:name])
+        @user=User.login(params[:name],params[:password])
+        redirect to "/main/#{@user}"
+    else
+      redirect to "/sign_up"
+    end
   end
   
   get "/update_settings/:id" do
@@ -51,9 +47,6 @@ class MainBlog < Sinatra::Base
     redirect to "/main/#{@user.id}"  
   end
   
-  get "/sign_up" do
-    erb :sign_up
-  end
   
   post "/new_user" do
     User.new_guy(params)
@@ -76,6 +69,11 @@ class MainBlog < Sinatra::Base
     @post=Post.new_post(@user.id, params[:title], params[:post])
     #@user=User.where(:name => name, :password=>password).first
     erb :save
+  end
+  
+  get "/all_posts/:id" do
+    @user=User.find(params[:id])
+    erb :allposts
   end
 end
   

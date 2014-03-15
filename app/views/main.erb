@@ -6,9 +6,12 @@
 <h5><%= @user.email %></h5>
 
 <p><% Post.all.reverse.each do |post| %>
-	<br><h10><%= post.title %><h10><br>
-	<h12><%= post.post %><h12><br>	
-	<h8><%= post.mood %></h8>	
+	<% unless post.user_id == @user.id  %>
+	<br><h10><%= post.title %></h10><br>
+	<h12><%= post.post %></h12><br>	
+	<h8><%= post.mood %> <%= post.user_id %></h8>	
+	<% end %>
 <% end %>
 <p><h10><a href="/compose/<%= @user.id %>">Make a New Post!</a></h10></p>
 <p><h10><a href="/update_settings/<%=@user.id%>">Update Settings</a></h10></p>
+<p><h10><a href="/all_posts/<%= @user.id %>">All Posts(Including Yours!)</a></h10></p>

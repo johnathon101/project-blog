@@ -1,1 +1,5 @@
-<%= Posts.posts.all %>
+<p><% Post.all.reverse.each do |post| %>
+	<br><h10><%= post.title %></h10><br>
+	<h12><%= post.post %></h12><br>	
+	<h8><%= post.mood %></h8>	
+<% end %>
