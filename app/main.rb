@@ -10,20 +10,20 @@ class MainBlog < Sinatra::Base
   
   #Client.find_by! first_name: 'Lifo'
   post "/login" do
-    if User.find(params[:name])
-      @user=User.login(params[:name],params[:password])
-      redirect to "/main/#{@user}"
+    #if User.find(params[:name])
+    @user=User.login(params[:name],params[:password])
+    #  redirect to "/main/#{@user}"
       #binding.pry
-    else
-      redirect to "/sign_up"
-    end
+      #else
+      #redirect to "/sign_up"
+      #end
     
-    if User.find(params[:name])
-      redirect to "/main/#{@user}"
+    #if User.find(params[:name])
+    redirect to "/main/#{@user}"
       #binding.pry
-    else
-      redirect to "/sign_up"
-    end
+      #else
+      #redirect to "/sign_up"
+      #end
   end
   
   get "/update_settings/:id" do

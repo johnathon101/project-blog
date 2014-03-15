@@ -93,21 +93,19 @@ class Post < ActiveRecord::Base
   belongs_to :user
   
   def self.new_post(user_id, title, content)
-    new_post=Post.new(:user_id=>user_id, :title=>title, :post=>content, :mood=> 0)
+    mood=Post.get_mood(content)
+    new_post=Post.new(:user_id=>user_id, :title=>title, :post=>content, :mood=> mood)
     new_post.save
     return new_post.id
   end
   
-  def self.get_mood(post_id)
+  def self.get_mood(content)
     @db=SQLite3::Database.open("blog")
-    @post_in=Post.where(:id => post_id).first
     val_array=Array.new
     words=[]
     article_sum=0
-    post_from_db=@post_in.post
-    words=post_from_db.split(' ')
-    #This is probably terribly inefficient in resources, refactor.
-    words.each do |a_word|
+    words_array=content.split(' ')
+    words_array.each do |a_word|
       fix_word=a_word.strip.downcase.gsub(/[^A-Za-z0-9]+/, '')
       puts a_word
       val_array<<@db.execute("SELECT value FROM dictionary WHERE word IS '#{fix_word}'")[0]
@@ -116,7 +114,6 @@ class Post < ActiveRecord::Base
     sum=0
     real_sum=article_sum.inject {|sum, i| sum + i}
     sum=real_sum.inject{|sum, i|sum+=i}
-    @post_in.update_attributes({:mood=>sum}) 
     return sum
   end
   
@@ -131,7 +128,10 @@ end
 #Runs script through Post object to get a mood value and assigns it back to post with user
 #post_id, mood
 class Mood < ActiveRecord::Base
-  #CREATE TABLE moods (id integer primary key autoincrement, user_id integer, title varchar, mood integer);
+  #CREATE TABLE moods (id integer def pr(args)
+    
+  #endimary key autoincrement, user_id integer, title varchar, mood integer);
+
   
   def self.new_mood(user_id, title, mood)
     new_mood=Mood.new(:id=>user.id, :title=>title, :mood=>mood)
@@ -149,7 +149,7 @@ end
 class HeatMap
   #db table heat_maps
 end
-
+binding.pry
 #CREATE TABLE users (id integer primary key autoincrement, name varchar, email varchar, location varchar, mood_pref integer, password varchar, auth integer, is_auth integer);
 
 #CREATE TABLE posts (id integer primary key autoincrement, user_id integer, title varchar, post text)
