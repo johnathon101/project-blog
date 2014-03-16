@@ -151,9 +151,9 @@ class Heat < ActiveRecord::Base
 
   def initialize
     
-    @map=Heatmap.new
+    @map=Heatmap::Map.new
   end
-  def build_coordinates
+  def self.build_coordinates
     d0=["CT","ME","MA","NH","RH","VT"]#ATL NE
     d1=["NJ","NY","PA"]#N ATL NE
     d2=["IL","IN","MI","OH","WI"]#MW NCentral
@@ -164,7 +164,7 @@ class Heat < ActiveRecord::Base
     d7=["AZ","CO","ID","MT","NV","NM","UT","WY"]#MTN
     d8=["AK","CA","HI","OR","WA"]#WEST COAST
     @locations =[d0,d1,d2,d3,d4,d5,d6,d7,d8]
-    @sum_totals=Array.new(9,1)
+    @sum_totals=Array.new(9,1.0)
     i=0
     @locations.each do |place|
       div_total=User.joins(:posts).where(:location => place)
@@ -175,42 +175,27 @@ class Heat < ActiveRecord::Base
               post_value=Post.joins(:user).where(:user_id=>post.id).first
               sum+=post_value.mood
             end
-            sum_totals[i]=sum
+            @sum_totals[i]=sum
         end
         i+=1
       end
-      return sum_totals
+      binding.pry
+      return @sum_totals
   end  
 
   def coord_map
-    built=build_coordinates
-    built[0].times do
-      @map << Heatmap::Area.new(9,4)
-    end
-    built[1].times do
-      @map << Heatmap::Area.new(8,3)
-    end
-    built[2].times do
-      @map << Heatmap::Area.new(6,3)
-    end
-    built[3].times do
-      @map << Heatmap::Area.new(5,3)
-    end
-    built[4].times do
-      @map << Heatmap::Area.new(8,1)
-    end
-    built[5].times do
-      @map << Heatmap::Area.new(7,2)
-    end
-    built[6].times do
-      @map << Heatmap::Area.new(5,2)
-    end
-    built[7].times do
-      @map << Heatmap::Area.new(3,2)
-    end
-    built[8].times do
-      @map << Heatmap::Area.new(1,2)
-    end
-    @map.output('simple.png')
+    @map=Heatmap::Map.new
+    built=Heat.build_coordinates
+    binding.pry
+    @map.points << Heatmap::Point.new(95,45,((built[0])/5))
+    @map.points << Heatmap::Point.new(90,38,((built[1])/5))
+    @map.points << Heatmap::Point.new(70,35,((built[2])/5))
+    @map.points << Heatmap::Point.new(40,35,((built[3])/5))
+    @map.points << Heatmap::Point.new(93,15,((built[4])/5))
+    @map.points << Heatmap::Point.new(70,20,((built[5])/5))
+    @map.points << Heatmap::Point.new(40,20,((built[6])/5))
+    @map.points << Heatmap::Point.new(25,20,((built[7])/5))
+    @map.points << Heatmap::Point.new(10,25,((built[8])/5))
+    @map.output("heatmap.png")
   end
 end

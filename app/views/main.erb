@@ -1,6 +1,7 @@
 <head>
 <link href="<%= url('/mystyle.css') %>" rel="stylesheet" type="text/css" />
 </head>
+
 <p><% Post.all.reverse.each do |post| %>
 	<% unless post.user_id == @user.id && post.mood < @user.mood_pref %>
 	<br><h10><%= post.title %></h10><br>
