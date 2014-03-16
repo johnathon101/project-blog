@@ -167,12 +167,14 @@ class Heat
     #CT ME MA NH RH VT
     #Post.where(:location => ?
     Post.all.each do |post|
+      binding.pry
       @locations[0].each do |st|
         if st == post.location
           sum+=post.mood
         end
       end
-    return sum_a
+    end
+    return sum
   end
   
   def self.div2
@@ -183,6 +185,7 @@ class Heat
           sum+=post.mood
         end
       end
+    end
     return sum
   end
   
@@ -194,6 +197,7 @@ class Heat
           sum+=post.mood
         end
       end
+    end
     return sum
   end
   
@@ -205,6 +209,7 @@ class Heat
           sum+=post.mood
         end
       end
+    end
     return sum
   end
   
@@ -216,6 +221,7 @@ class Heat
           sum=post.mood
         end
       end
+    end
     return sum
   end
   
@@ -227,6 +233,7 @@ class Heat
           sum+=post.mood
         end
       end
+    end
     return sum
   end
   
@@ -238,6 +245,7 @@ class Heat
           sum+=post.mood
         end
       end
+    end
     return sum
   end
   
@@ -249,6 +257,7 @@ class Heat
           sum=post.mood
         end
       end
+    end
     return sum
   end
   
@@ -261,6 +270,7 @@ class Heat
           sum+=post.mood
         end
       end
+    end
     return sum
   end
   def self.coord_map

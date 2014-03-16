@@ -73,7 +73,8 @@ class MainBlog < Sinatra::Base
   
   get "/all_posts/:id" do
     @user=User.find(params[:id])
-    Heat.build_map
+    @map_main=Heat.new
+    @map_main.coord_map
     erb :allposts
   end
   
