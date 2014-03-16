@@ -1,7 +1,7 @@
 require 'active_record'
 require 'logger'
 require 'pry'
-
+require 'heatmap'
   
 ActiveRecord::Base.establish_connection(
       :adapter  => 'sqlite3', 
@@ -91,7 +91,6 @@ end
 #title(varchar), post(txt) limit 510, user_id
 class Post < ActiveRecord::Base
   belongs_to :user
-  
   def self.new_post(user_id, title, content)
     mood=Post.get_mood(content)
     new_post=Post.new(:user_id=>user_id, :title=>title, :post=>content, :mood=> mood)
@@ -125,7 +124,10 @@ class Post < ActiveRecord::Base
       value=2
     elsif sum<=-3
       value=1
+    else
+      value=3
     end
+
     return value
   end
   
@@ -139,25 +141,160 @@ end
 
 #Runs script through Post object to get a mood value and assigns it back to post with user
 #post_id, mood
-class Mood < ActiveRecord::Base
-  #CREATE TABLE moods (id integer def pr(args)
-    
-  #endimary key autoincrement, user_id integer, title varchar, mood integer);
-
+class Comment
   
-  def self.new_mood(user_id, title, mood)
-    new_mood=Mood.new(:id=>user.id, :title=>title, :mood=>mood)
-  #need values of words with different connotations, ran through the post text and assign a value to any hits from the words to text. Maybe create a table of words with values we're looking for and join them to get a sum?
-  #db table moods
-  end
-  def self.blend_mood
-    #return matches of post.mood and user.mood_pref and display results cleanly
-    #psuedo SELECT * ON posts WHERE moods.rating=user.mood_pref
-  end
   
 end
 
 #Create a general mood of area based on user location and mood of posts from that location, join mood, location.
-class HeatMap
-  #db table heat_maps
+class Heat
+
+  def initialize
+    d0=["CT","ME","MA","NH","RH","VT"]#ATL NE
+    d1=["NJ","NY","PA"]#N ATL NE
+    d2=["IL","IN","MI","OH","WI"]#MW NCentral
+    d3=["IA","KS","MN","MO","NE","ND","SD"]#MIDWEST
+    d4=["DE","FL","GA","MD","NC","SC","VA","WV"]#MID ATL S
+    d5=["AL","KY","MS","TN"]#MIDWEST S MID CENTRAL
+    d6=["AR","LA","OK","TX"]#SOUTH SOUTH WEST
+    d7=["AZ","CO","ID","MT","NV","NM","UT","WY"]#MTN
+    d8=["AK","CA","HI","OR","WA"]#WEST COAST
+    @locations =[d0,d1,d2,d3,d4,d5,d6,d7,d8]
+    @map=Heatmap.new
+  end
+  
+  def self.div1
+    #CT ME MA NH RH VT
+    #Post.where(:location => ?
+    Post.all.each do |post|
+      @locations[0].each do |st|
+        if st == post.location
+          sum+=post.mood
+        end
+      end
+    return sum_a
+  end
+  
+  def self.div2
+    #NJ NY PA
+    Post.all.each do |post|
+      @locations[1].each do |st|
+        if st == post.location 
+          sum+=post.mood
+        end
+      end
+    return sum
+  end
+  
+  def self.div3
+    #IL IN MI OH WI
+    Post.all.each do |post|
+      @locations[2].each do |st|
+        if st == post.location
+          sum+=post.mood
+        end
+      end
+    return sum
+  end
+  
+  def self.div4
+    #IA KS MN MO NE ND SD
+    Post.all.each do |post|
+      @locations[3].each do |st|
+        if st == post.location
+          sum+=post.mood
+        end
+      end
+    return sum
+  end
+  
+  def self.div5
+    #DE FL GA MD NC SC VA WV
+    Post.all.each do |post|
+      @locations[4].each do |st|
+        if st == post.location
+          sum=post.mood
+        end
+      end
+    return sum
+  end
+  
+  def self.div6
+    #AL KY MS TN
+    Post.all.each do |post|
+      @locations[5].each do |st|
+        if st == post.location
+          sum+=post.mood
+        end
+      end
+    return sum
+  end
+  
+  def self.div7
+    #AR LA OK TX
+    Post.all.each do |post|
+      @locations[6].each do |st|
+        if st == post.location
+          sum+=post.mood
+        end
+      end
+    return sum
+  end
+  
+  def self.div8
+    #AZ CO ID MT NV NM UT WY
+    Post.all.each do |post|
+      @locations[7].each do |st|
+        if st == post.location
+          sum=post.mood
+        end
+      end
+    return sum
+  end
+  
+  def self.div9
+    #AK CA HI OR WA
+    #Post.where(:location => "")
+    Post.all.each do |post|
+      @locations[8].each do |st|
+        if st == post.location
+          sum+=post.mood
+        end
+      end
+    return sum
+  end
+  def self.coord_map
+    Heat.div1.times do
+      @map << Heatmap::Area.new(9,4)
+    end
+    Heat.div2.times do
+      @map << Heatmap::Area.new(8,3)
+    end
+    Heat.div3.times do
+      @map << Heatmap::Area.new(6,3)
+    end
+    Heat.div4.times do
+      @map << Heatmap::Area.new(5,3)
+    end
+    Heat.div5.times do
+      @map << Heatmap::Area.new(8,1)
+    end
+    Heat.div6.times do
+      @map << Heatmap::Area.new(7,2)
+    end
+    Heat.div7.times do
+      @map << Heatmap::Area.new(5,2)
+    end
+    Heat.div8.times do
+      @map << Heatmap::Area.new(3,2)
+    end
+    Heat.div9.times do
+      @map << Heatmap::Area.new(1,2)
+    end
+    @map.output('simple.png')
+  end
+  
+  def self.build_map
+    Heat.coord_map
+  end
 end

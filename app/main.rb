@@ -73,7 +73,12 @@ class MainBlog < Sinatra::Base
   
   get "/all_posts/:id" do
     @user=User.find(params[:id])
+    Heat.build_map
     erb :allposts
+  end
+  
+  after do
+    ActiveRecord::Base.connection.close
   end
 end
   
