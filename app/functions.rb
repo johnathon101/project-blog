@@ -2,7 +2,7 @@ require 'active_record'
 require 'logger'
 require 'pry'
 require 'heatmap'
-  
+
 ActiveRecord::Base.establish_connection(
       :adapter  => 'sqlite3', 
       :database => 'blog'
@@ -147,9 +147,13 @@ class Comment
 end
 
 #Create a general mood of area based on user location and mood of posts from that location, join mood, location.
-class Heat
+class Heat < ActiveRecord::Base
 
   def initialize
+    
+    @map=Heatmap.new
+  end
+  def build_coordinates
     d0=["CT","ME","MA","NH","RH","VT"]#ATL NE
     d1=["NJ","NY","PA"]#N ATL NE
     d2=["IL","IN","MI","OH","WI"]#MW NCentral
@@ -160,151 +164,53 @@ class Heat
     d7=["AZ","CO","ID","MT","NV","NM","UT","WY"]#MTN
     d8=["AK","CA","HI","OR","WA"]#WEST COAST
     @locations =[d0,d1,d2,d3,d4,d5,d6,d7,d8]
-    @map=Heatmap.new
-  end
-  
-  def self.div1
-    #CT ME MA NH RH VT
-    #Post.where(:location => ?
-    Post.all.each do |post|
-      binding.pry
-      @locations[0].each do |st|
-        if st == post.location
-          sum+=post.mood
+    @sum_totals=Array.new(9,1)
+    i=0
+    @locations.each do |place|
+      div_total=User.joins(:posts).where(:location => place)
+      sum=1
+        if div_total!=[]
+            div_total.each do |post|
+              #post is the user here, here I need to get posts from user and sum the moods
+              post_value=Post.joins(:user).where(:user_id=>post.id).first
+              sum+=post_value.mood
+            end
+            sum_totals[i]=sum
         end
+        i+=1
       end
-    end
-    return sum
-  end
-  
-  def self.div2
-    #NJ NY PA
-    Post.all.each do |post|
-      @locations[1].each do |st|
-        if st == post.location 
-          sum+=post.mood
-        end
-      end
-    end
-    return sum
-  end
-  
-  def self.div3
-    #IL IN MI OH WI
-    Post.all.each do |post|
-      @locations[2].each do |st|
-        if st == post.location
-          sum+=post.mood
-        end
-      end
-    end
-    return sum
-  end
-  
-  def self.div4
-    #IA KS MN MO NE ND SD
-    Post.all.each do |post|
-      @locations[3].each do |st|
-        if st == post.location
-          sum+=post.mood
-        end
-      end
-    end
-    return sum
-  end
-  
-  def self.div5
-    #DE FL GA MD NC SC VA WV
-    Post.all.each do |post|
-      @locations[4].each do |st|
-        if st == post.location
-          sum=post.mood
-        end
-      end
-    end
-    return sum
-  end
-  
-  def self.div6
-    #AL KY MS TN
-    Post.all.each do |post|
-      @locations[5].each do |st|
-        if st == post.location
-          sum+=post.mood
-        end
-      end
-    end
-    return sum
-  end
-  
-  def self.div7
-    #AR LA OK TX
-    Post.all.each do |post|
-      @locations[6].each do |st|
-        if st == post.location
-          sum+=post.mood
-        end
-      end
-    end
-    return sum
-  end
-  
-  def self.div8
-    #AZ CO ID MT NV NM UT WY
-    Post.all.each do |post|
-      @locations[7].each do |st|
-        if st == post.location
-          sum=post.mood
-        end
-      end
-    end
-    return sum
-  end
-  
-  def self.div9
-    #AK CA HI OR WA
-    #Post.where(:location => "")
-    Post.all.each do |post|
-      @locations[8].each do |st|
-        if st == post.location
-          sum+=post.mood
-        end
-      end
-    end
-    return sum
-  end
-  def self.coord_map
-    Heat.div1.times do
+      return sum_totals
+  end  
+
+  def coord_map
+    built=build_coordinates
+    built[0].times do
       @map << Heatmap::Area.new(9,4)
     end
-    Heat.div2.times do
+    built[1].times do
       @map << Heatmap::Area.new(8,3)
     end
-    Heat.div3.times do
+    built[2].times do
       @map << Heatmap::Area.new(6,3)
     end
-    Heat.div4.times do
+    built[3].times do
       @map << Heatmap::Area.new(5,3)
     end
-    Heat.div5.times do
+    built[4].times do
       @map << Heatmap::Area.new(8,1)
     end
-    Heat.div6.times do
+    built[5].times do
       @map << Heatmap::Area.new(7,2)
     end
-    Heat.div7.times do
+    built[6].times do
       @map << Heatmap::Area.new(5,2)
     end
-    Heat.div8.times do
+    built[7].times do
       @map << Heatmap::Area.new(3,2)
     end
-    Heat.div9.times do
+    built[8].times do
       @map << Heatmap::Area.new(1,2)
     end
     @map.output('simple.png')
-  end
-  
-  def self.build_map
-    Heat.coord_map
   end
 end
